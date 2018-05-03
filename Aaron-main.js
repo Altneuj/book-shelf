@@ -1,5 +1,28 @@
-var addBooks = function (data) {
-  books = [];
+var bookLib = Collection();
+
+
+var fetch = function(query) {
+  lastQuery = encodeURIComponent(query);
+  $.ajax({
+    method: "GET",
+    url: "https://www.googleapis.com/books/v1/volumes?q=" + lastQuery,
+    dataType: "json",
+    beforeSend: function() {
+      $('#loaderDiv').show();
+    },
+    success: function (data) {
+        $('#loaderDiv').hide();
+      addBooks(data);
+      console.log("We are the winner!");
+    },
+    error: function(jqXHR,textStatus,errorThrown) {
+      console.log(textStatus);
+      console.log('FAIL!');
+    }
+  })
+};
+
+var addBooks = function(data) {
 
   for (var i = 0; i < data.items.length; i++) {
     var bookData = data.items[i];
@@ -44,16 +67,27 @@ var addBooks = function (data) {
       }
     };
 
-    var book = {
+    var bookModel = Model({
       title: title(),
       author: author(),
       imageURL: imageURL(),
       pageCount: pageCount(),
       isbn: isbn()
-    };
+    });
 
-    books.push(book);
+    var template = Handlebars.compile($('#book-template').html());
+
+    var bookView = View(bookModel, template);
+
+      bookLib.change(function () {
+        bookView.render();
+      });
+    $('.books').append(bookView.render());
+    bookLib.add(bookModel)
+    };
   }
 
-  renderBooks();
-};
+  $('.search').on('click', function () {
+    var search = $('#search-query').val();
+    fetch(search);
+  });

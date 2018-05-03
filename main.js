@@ -106,9 +106,14 @@ var renderShelf = function(index) {
   var shelfTemplate = Handlebars.compile(shelfSource);
   var newShelfHtml = shelfTemplate(shelfObj);
 
-
 $('.shelves').append(newShelfHtml);
+
 }
+// IDEA not currently
+// $('.shelf-container').on('click', '.rename', function(){
+//   var rename = prompt("what would you like to name it?");
+//   $(this).text(rename);
+// })
 
 var deleteShelfItem = function(index) {
   index.remove();
