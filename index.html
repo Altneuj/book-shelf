@@ -43,7 +43,17 @@
         </div>
       </div>
     </div>
+    <hr/>
+    <div class="row  top-margin">
+      <div class="col">
+      <h1 class="text-center"> My Shelf </h1>
+      </div>
+        </div>
+      <div class=" row shelves">
+
+      </div>
     </div>
+
 
     <script id="book-template" type="text/x-handlebars-template">
       <div class="book col-md-6">
@@ -51,6 +61,13 @@
         <div>Author: <strong>{{author}}</strong></div>
         <div>Pages: <strong>{{pageCount}}</strong></div>
         <div>ISBN: <strong>{{isbn}}</strong></div>
+        <img src="{{imageURL}}" alt="">
+      </div>
+    </script>
+
+    <script id="shelf-template" type="text/x-handlebars-template">
+      <div class="shelf-item col-md-3">
+        <div> Author: <strong>{{author}}</strong></div>
         <img src="{{imageURL}}" alt="">
       </div>
     </script>

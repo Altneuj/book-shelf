@@ -1,9 +1,10 @@
 var books = null;
-var renderBooks = function(){
-  $('.books').empty();
 var paginator =0;
 var lastQuery = null;
 var pageCount = 0;
+
+var renderBooks = function(){
+  $('.books').empty();
 
 
   for (var i =0; i < books.length; i++) {
@@ -82,3 +83,36 @@ var addBooks = function(data) {
 
   renderBooks();
 };
+
+$('.books').on('click', '.book', function() {
+  var bookIndex = $(this).index()
+  renderShelf(bookIndex);
+  console.log($(this).index());
+
+})
+var renderShelf = function(index) {
+  var shelfObj = {};
+  shelfObj.author = books[index].volumeInfo['authors'];
+  shelfObj.title = books[index].volumeInfo['title'];
+  if(books[index].volumeInfo.imageLinks !== undefined){
+    shelfObj.imageURL = books[index].volumeInfo.imageLinks['thumbnail'];
+  } else {
+    shelfObj.imageURL = "https://www.entrustdatacard.com/-/media/images/video-thumbnails_images/thumb-not-available.png";
+  }
+  shelfObj.isbn = books[index].volumeInfo.industryIdentifiers[0].identifier;
+  shelfObj.pageCount = books[index].volumeInfo['pageCount'];
+
+  var shelfSource = $('#shelf-template').html();
+  var shelfTemplate = Handlebars.compile(shelfSource);
+  var newShelfHtml = shelfTemplate(shelfObj);
+
+
+$('.shelves').append(newShelfHtml);
+}
+
+var deleteShelfItem = function(index) {
+  index.remove();
+}
+$('.shelves').on('click', '.shelf-item', function(){
+  deleteShelfItem($(this));
+})
