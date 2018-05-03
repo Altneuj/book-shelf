@@ -1,7 +1,10 @@
 var books = null;
-
 var renderBooks = function(){
   $('.books').empty();
+var paginator =0;
+var lastQuery = null;
+var pageCount = 0;
+
 
   for (var i =0; i < books.length; i++) {
     var obj = {};
@@ -20,17 +23,23 @@ var renderBooks = function(){
     var newHtml = template(obj);
 
     $('.books').append(newHtml);
+    $('.next-page').show();
+
 
   }
 }
 
 var fetch = function(query) {
-  console.log(encodeURIComponent(query));
+  lastQuery = encodeURIComponent(query);
   $.ajax({
     method: "GET",
-    url: "https://www.googleapis.com/books/v1/volumes?q=" + encodeURIComponent(query),
+    url: "https://www.googleapis.com/books/v1/volumes?q=" + lastQuery + "&startIndex=" + paginator,
     dataType: "json",
+    beforeSend: function() {
+      $('#loaderDiv').show();
+    },
     success: function (data) {
+        $('#loaderDiv').hide();
       addBooks(data);
       console.log("We are the winner!");
     },
@@ -43,10 +52,30 @@ var fetch = function(query) {
 
 $('.search').on('click', function () {
   var search = $('#search-query').val();
-
+  paginator = 0;
+  pageCount = 0;
+  $('.page-counter').text("Page Number: " + pageCount);
   fetch(search);
+  $('.previous-page').hide();
 });
 
+$('.next-page').on('click', function() {
+  paginator += 10;
+  pageCount += 1;
+  $('.page-counter').text("Page Number: " + pageCount);
+  fetch(lastQuery);
+  $('.previous-page').show();
+});
+
+  $('.previous-page').on('click', function() {
+    if(pageCount == 1) {
+      $('.previous-page').hide();
+    }
+    paginator -= 10;
+    pageCount -= 1;
+    $('.page-counter').text("Page Number: " + pageCount);
+    fetch(lastQuery);
+})
 var addBooks = function(data) {
   books = data.items;
 

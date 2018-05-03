@@ -6,3 +6,14 @@
   margin-top: 40px;
   margin-bottom: 40px;
 }
+
+#loaderDiv {
+  display:none;
+}
+
+#next-page {
+  display:none;
+}
+#previous-page {
+  display:none;
+}
